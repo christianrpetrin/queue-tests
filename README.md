@@ -16,9 +16,9 @@ go test -bench=. -benchmem
 - BenchmarkList*: benchmark the standard list package using it as a FIFO queue.
 - BenchmarkRing*: benchmark the standard ring package using it as a FIFO queue.
 - BenchmarkChannel*: benchmark a standard channel using it as a FIFO queue.
-- BenchmarkGammazeroDeque*: benchmark the (gammazero)[https://github.com/gammazero/deque] package using it as a FIFO queue.
-- BenchmarkPhfQueue*: benchmark the (phf)[https://github.com/phf/go-queue] package using it as a FIFO queue.
-- BenchmarkJujuDeque*: benchmark the (juju)[https://github.com/juju/utils/tree/master/deque] package using it as a FIFO queue.
+- BenchmarkGammazeroDeque*: benchmark the [gammazero](https://github.com/gammazero/deque) package using it as a FIFO queue.
+- BenchmarkPhfQueue*: benchmark the [phf](https://github.com/phf/go-queue) package using it as a FIFO queue.
+- BenchmarkJujuDeque*: benchmark the [juju](https://github.com/juju/utils/tree/master/deque) package using it as a FIFO queue.
 - BenchmarkQueueImpl1*: benchmark a custom queue implementation which uses a linked array with append and len builtin functions.
 - BenchmarkQueueImpl2*: benchmark a custom queue implementation which uses a linked array with simple local variables instead of relying on builtin len and append functions.
 - BenchmarkQueueImpl3*: benchmark a custom queue implementation which uses a linked array with simple local variables instead of relying on builtin len and append functions. This implementation doesn't accept nil values and returns nil on empty queue. Otherwise it's the same implementation as BenchmarkQueueImpl2*.

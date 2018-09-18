@@ -18,8 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Package QueueImpl6 implements an unbounded, dynamically growing FIFO queue.
-// Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
+// Package queueimpl6 implements a bounded FIFO queue.
 // This implementation tests the queue performance when storing the values in a simple slice. Pop removes the first slice element.
 package queueimpl6
 
@@ -44,7 +43,6 @@ func (q *QueueImpl6) Init() *QueueImpl6 {
 }
 
 // Len returns the number of elements of queue q.
-// The complexity is O(1).
 func (q *QueueImpl6) Len() int { return len(q.v) }
 
 // Front returns the first element of list l or nil if the list is empty.
