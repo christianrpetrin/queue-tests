@@ -19,8 +19,6 @@
 // SOFTWARE.
 
 // Package queueimpl4 implements an unbounded, dynamically growing FIFO queue.
-// Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
 // This implementation tests the queue performance when storing the "next" pointer as part of the values array instead of using a separate field.
 // The next element is stored in the last position of the internal array, which is a reserved position.
 // A node is each internal array that is used to store the elements.
@@ -76,6 +74,7 @@ func (q *QueueImpl4) Len() int { return q.len }
 
 // Front returns the first element of list l or nil if the list is empty.
 // If the queue is empty, nil is returned.
+// The complexity is O(1).
 func (q *QueueImpl4) Front() interface{} {
 	if q.head[q.hp] == nil {
 		return nil
@@ -85,6 +84,7 @@ func (q *QueueImpl4) Front() interface{} {
 }
 
 // Push adds a value to the queue.
+// The complexity is O(1).
 func (q *QueueImpl4) Push(v interface{}) error {
 	if v == nil {
 		return errors.New("Cannot add nil value")
@@ -105,6 +105,7 @@ func (q *QueueImpl4) Push(v interface{}) error {
 
 // Pop retrieves and removes the next element from the queue.
 // If the queue is empty, nil is returned.
+// The complexity is O(1).
 func (q *QueueImpl4) Pop() interface{} {
 	if q.len == 0 {
 		return nil
