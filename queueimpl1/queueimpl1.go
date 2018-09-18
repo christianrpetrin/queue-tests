@@ -20,7 +20,6 @@
 
 // Package queueimpl1 implements an unbounded, dynamically growing FIFO queue.
 // Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
 // This implementation tests the queue performance when controlling the length and current positions in the arrays using the builtin len and append functions.
 package queueimpl1
 
@@ -42,7 +41,7 @@ type QueueImpl1 struct {
 	// Pos is the index pointing to the current first element in the queue (i.e. first element added in the current queue values).
 	pos int
 
-	// Len holds the current queue values length.
+	// Len holds the current queue length.
 	len int
 }
 

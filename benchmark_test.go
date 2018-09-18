@@ -36,7 +36,7 @@ import (
 	phf "github.com/phf/go-queue/queue"
 )
 
-func BenchmarkListAdd(b *testing.B) {
+func BenchmarkAddList(b *testing.B) {
 	q := list.New()
 
 	for n := 0; n < b.N; n++ {
@@ -44,7 +44,7 @@ func BenchmarkListAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkRingAdd(b *testing.B) {
+func BenchmarkAddRing(b *testing.B) {
 	r := ring.New(b.N)
 
 	for n := 0; n < b.N; n++ {
@@ -53,7 +53,7 @@ func BenchmarkRingAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkChannelAdd(b *testing.B) {
+func BenchmarkAddChannel(b *testing.B) {
 	c := make(chan int, b.N)
 
 	for n := 0; n < b.N; n++ {
@@ -61,7 +61,7 @@ func BenchmarkChannelAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkGammazeroDequeAdd(b *testing.B) {
+func BenchmarkAddGammazero(b *testing.B) {
 	var q gammazero.Deque
 
 	for n := 0; n < b.N; n++ {
@@ -69,7 +69,7 @@ func BenchmarkGammazeroDequeAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkPhfQueueAdd(b *testing.B) {
+func BenchmarkAddPhf(b *testing.B) {
 	q := phf.New()
 
 	for n := 0; n < b.N; n++ {
@@ -77,7 +77,7 @@ func BenchmarkPhfQueueAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkJujuDequeAdd(b *testing.B) {
+func BenchmarkAddJuju(b *testing.B) {
 	q := juju.New()
 
 	for n := 0; n < b.N; n++ {
@@ -85,7 +85,7 @@ func BenchmarkJujuDequeAdd(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl1Add(b *testing.B) {
+func BenchmarkAddImpl1(b *testing.B) {
 	q := queueimpl1.New()
 
 	for n := 0; n < b.N; n++ {
@@ -93,7 +93,7 @@ func BenchmarkQueueImpl1Add(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl2Add(b *testing.B) {
+func BenchmarkAddImpl2(b *testing.B) {
 	q := queueimpl2.New()
 
 	for n := 0; n < b.N; n++ {
@@ -101,7 +101,7 @@ func BenchmarkQueueImpl2Add(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl3Add(b *testing.B) {
+func BenchmarkAddImpl3(b *testing.B) {
 	q := queueimpl3.New()
 
 	for n := 0; n < b.N; n++ {
@@ -109,7 +109,7 @@ func BenchmarkQueueImpl3Add(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl4Add(b *testing.B) {
+func BenchmarkAddImpl4(b *testing.B) {
 	q := queueimpl4.New()
 
 	for n := 0; n < b.N; n++ {
@@ -117,7 +117,7 @@ func BenchmarkQueueImpl4Add(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl5Add(b *testing.B) {
+func BenchmarkAddImpl5(b *testing.B) {
 	q := queueimpl5.New()
 
 	for n := 0; n < b.N; n++ {
@@ -125,7 +125,7 @@ func BenchmarkQueueImpl5Add(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl6Add(b *testing.B) {
+func BenchmarkAddImpl6(b *testing.B) {
 	q := queueimpl6.New()
 
 	for n := 0; n < b.N; n++ {
@@ -135,97 +135,7 @@ func BenchmarkQueueImpl6Add(b *testing.B) {
 
 // --------------------------------------------------------------
 
-func BenchmarkListRemove(b *testing.B) {
-	l := list.New()
-	for n := 0; n < b.N; n++ {
-		l.PushBack(n)
-	}
-	b.ResetTimer()
-
-	for e := l.Front(); e != nil; e = e.Next() {
-	}
-}
-
-func BenchmarkPhfQueueRemove(b *testing.B) {
-	q := phf.New()
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-	b.ResetTimer()
-
-	for e := q.PopFront(); e != nil; e = q.PopFront() {
-	}
-}
-
-func BenchmarkJujuDequeRemove(b *testing.B) {
-	q := juju.New()
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-	b.ResetTimer()
-
-	for _, ok := q.PopFront(); ok; _, ok = q.PopFront() {
-	}
-}
-
-func BenchmarkGammazeroDequeRemove(b *testing.B) {
-	var q gammazero.Deque
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-	b.ResetTimer()
-
-	for v := q.PopFront(); v != nil; v = q.PopFront() {
-	}
-}
-
-func BenchmarkQueueImpl1Remove(b *testing.B) {
-	q := queueimpl1.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-	b.ResetTimer()
-
-	for _, ok := q.Pop(); ok; _, ok = q.Pop() {
-	}
-}
-
-func BenchmarkQueueImpl2Remove(b *testing.B) {
-	q := queueimpl2.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-	b.ResetTimer()
-
-	for _, ok := q.Pop(); ok; _, ok = q.Pop() {
-	}
-}
-
-func BenchmarkQueueImpl3Remove(b *testing.B) {
-	q := queueimpl3.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-	b.ResetTimer()
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
-	}
-}
-
-func BenchmarkQueueImpl4Remove(b *testing.B) {
-	q := queueimpl4.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-	b.ResetTimer()
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
-	}
-}
-
-// --------------------------------------------------------------
-
-func BenchmarkListAddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveList(b *testing.B) {
 	l := list.New()
 	for n := 0; n < b.N; n++ {
 		l.PushBack(n)
@@ -235,7 +145,7 @@ func BenchmarkListAddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkRingAddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveRing(b *testing.B) {
 	r := ring.New(b.N)
 	for n := 0; n < b.N; n++ {
 		r.Value = n
@@ -247,7 +157,7 @@ func BenchmarkRingAddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkChannelAddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveChannel(b *testing.B) {
 	c := make(chan int, b.N)
 	for n := 0; n < b.N; n++ {
 		c <- n
@@ -258,7 +168,7 @@ func BenchmarkChannelAddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkGammazeroDequeAddRemove(b *testing.B) {
+func BenchmarkAddRemoveGammazero(b *testing.B) {
 	defer func() {
 		// gammazero deque implementation throws panic on empty deuque with no way to find out if the deuque is empty before hand.
 		// panic is a normal condition of this deque implementation.
@@ -273,7 +183,7 @@ func BenchmarkGammazeroDequeAddRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkPhfQueueAddAndRemove(b *testing.B) {
+func BenchmarkAddRemovePhf(b *testing.B) {
 	q := phf.New()
 	for n := 0; n < b.N; n++ {
 		q.PushBack(n)
@@ -283,7 +193,7 @@ func BenchmarkPhfQueueAddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkJujuDequeAddRemove(b *testing.B) {
+func BenchmarkAddRemoveJuju(b *testing.B) {
 	q := juju.New()
 	for n := 0; n < b.N; n++ {
 		q.PushBack(n)
@@ -293,7 +203,7 @@ func BenchmarkJujuDequeAddRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl1AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl1(b *testing.B) {
 	q := queueimpl1.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)
@@ -303,7 +213,7 @@ func BenchmarkQueueImpl1AddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl2AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl2(b *testing.B) {
 	q := queueimpl2.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)
@@ -313,7 +223,7 @@ func BenchmarkQueueImpl2AddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl3AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl3(b *testing.B) {
 	q := queueimpl3.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)
@@ -323,7 +233,7 @@ func BenchmarkQueueImpl3AddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl4AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl4(b *testing.B) {
 	q := queueimpl4.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)
@@ -333,7 +243,7 @@ func BenchmarkQueueImpl4AddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl5AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl5(b *testing.B) {
 	q := queueimpl5.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)
@@ -343,7 +253,7 @@ func BenchmarkQueueImpl5AddAndRemove(b *testing.B) {
 	}
 }
 
-func BenchmarkQueueImpl6AddAndRemove(b *testing.B) {
+func BenchmarkAddRemoveImpl6(b *testing.B) {
 	q := queueimpl6.New()
 	for n := 0; n < b.N; n++ {
 		q.Push(n)

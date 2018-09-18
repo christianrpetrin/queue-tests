@@ -20,7 +20,6 @@
 
 // Package queueimpl5 implements an unbounded, dynamically growing FIFO queue.
 // Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
 // This implementation tests the queue performance when storing the values in a simple slice. Pop moves the current position to next one instead of removing the first element.
 package queueimpl5
 

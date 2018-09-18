@@ -29,8 +29,17 @@ go test -bench=. -benchmem
 ## Supported Go Versions
 The bench tests on this package automatically compile and run for below Go versions.
 
-1.10.x
-1.11.x
+- "1.x"
+- "1.2.x"
+- "1.3.x"
+- "1.4.x"
+- "1.5.x"
+- "1.9.x"
+- "1.7.x"
+- "1.8.x"
+- "1.9.x"
+- "1.10.x"
+- "1.11.x"
 
 
 ## License

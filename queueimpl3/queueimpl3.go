@@ -20,8 +20,7 @@
 
 // Package queueimpl3 implements an unbounded, dynamically growing FIFO queue.
 // Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
-// This implementation tests the queue performance when controlling the length and current positions in the arrays using simple local variables instead of relying on builtin len and append functions.
+// This implementation tests the queue performance when controlling the length and current positions in the arrays using simple local variables instead of relying on the builtin len and append functions.
 // This implementation also doesn't accept nil values on Push making it a bit easier to use the struct as only one value is returned by Front and Pop functions.
 package queueimpl3
 

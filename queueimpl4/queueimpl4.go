@@ -20,7 +20,6 @@
 
 // Package queueimpl4 implements an unbounded, dynamically growing FIFO queue.
 // Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
 // This implementation tests the queue performance when storing the "next" pointer as part of the values array instead of using a separate field.
 // The next element is stored in the last position of the internal array, which is a reserved position.
 // A node is each internal array that is used to store the elements.
