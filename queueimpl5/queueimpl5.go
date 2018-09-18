@@ -18,9 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Package queueimpl5 implements an unbounded, dynamically growing FIFO queue.
+// Package queueimpl5 implements a bounded FIFO queue.
 // Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// Runtime of all operatons is O(1).
 // This implementation tests the queue performance when storing the values in a simple slice. Pop moves the current position to next one instead of removing the first element.
 package queueimpl5
 
@@ -49,7 +48,6 @@ func (q *QueueImpl5) Init() *QueueImpl5 {
 }
 
 // Len returns the number of elements of queue q.
-// The complexity is O(1).
 func (q *QueueImpl5) Len() int { return len(q.v) - q.pos }
 
 // Front returns the first element of list l or nil if the list is empty.
