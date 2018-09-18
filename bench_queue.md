@@ -1,9 +1,23 @@
 # Bench-Queue
 Below benchmark tests probe some of the most promising open source queue implementations as well as a few other implementations in this package. It also compares the queue implementations with using the standard list and ring packages as well as using channels as queues.
 
+## Tests
+- Benchmark*List: benchmark the standard list package using it as a FIFO queue.
+- Benchmark*Ring: benchmark the standard ring package using it as a FIFO queue.
+- Benchmark*Channel: benchmark a standard channel using it as a FIFO queue.
+- Benchmark*Gammazero: benchmark the [gammazero](https://github.com/gammazero/deque) package using it as a FIFO queue.
+- Benchmark*Phf: benchmark the [phf](https://github.com/phf/go-queue) package using it as a FIFO queue.
+- Benchmark*Juju: benchmark the [juju](https://github.com/juju/utils/tree/master/deque) package using it as a FIFO queue.
+- Benchmark*Impl1: benchmark a custom queue implementation which uses a linked array with append and len builtin functions.
+- Benchmark*Impl2: benchmark a custom queue implementation which uses a linked array with simple local variables instead of relying on builtin len and append functions.
+- Benchmark*Impl3: benchmark a custom queue implementation which uses a linked array with simple local variables instead of relying on builtin len and append functions. This implementation doesn't accept nil values and returns nil on empty queue. Otherwise it's the same implementation as Benchmark*Impl2.
+- Benchmark*Impl4: benchmark a custom queue implementation that stores the "next" pointer as part of the values array instead of using a separate field (as in previous custom implementations).
+- Benchmark*Impl5: benchmark a custom queue implementation that stores the values in a simple slice. Pop moves the current position to next one instead of removing the first element from the slice.
+- Benchmark*Impl6: benchmark a custom queue implementation that stores the values in a simple slice. Pop removes the first element from the slice.
+<br/>
+
 
 ## Results
-
 Results from benchmark add tests. Below tests only add items to the queue.
 
 ![Results from benchmark add tests](images/queue_add_tests.jpg?raw=true "Add tests")
@@ -17,7 +31,7 @@ Results from benchmark add and remove tests. Below tests add items to the queue 
 [Spreadsheet](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=2037026674&single=true)
 
 [Benchmark tests](benchmark_test.go)
-
+<br/>
 
 ### Raw Results
 

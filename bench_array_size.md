@@ -1,6 +1,15 @@
 # Bench-array-size
 Below benchmark tests probe queueimpl1 queue implementation with different internal array sizes.
 
+## Tests
+Format
+- BenchmarkQueueN: benchmark the [queueimpl1](queueimpl1/queueimpl1.go) with a internal array size of N.
+
+Example Tests
+- BenchmarkQueue1: benchmark the [queueimpl1](queueimpl1/queueimpl1.go) with a internal array size of 1.
+- BenchmarkQueue10: benchmark the [queueimpl1](queueimpl1/queueimpl1.go) with a internal array size of 10.
+- BenchmarkQueue100: benchmark the [queueimpl1](queueimpl1/queueimpl1.go) with a internal array size of 100.
+<br/>
 
 ## Results
 
@@ -9,6 +18,7 @@ Below benchmark tests probe queueimpl1 queue implementation with different inter
 [Spreadsheet](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=403129988&single=true)
 
 [Benchmark tests](queueimpl1/benchmark_test.go)
+<br/>
 
 
 ### Raw Results
