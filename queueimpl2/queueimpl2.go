@@ -80,6 +80,7 @@ func (q *QueueImpl2) Len() int { return q.len }
 
 // Front returns the first element of list l or nil if the list is empty.
 // The second, bool result indicates whether a valid value was returned; if the queue is empty, false will be returned.
+// The complexity is O(1).
 func (q *QueueImpl2) Front() (interface{}, bool) {
 	if q.len == 0 {
 		return nil, false
@@ -89,6 +90,7 @@ func (q *QueueImpl2) Front() (interface{}, bool) {
 }
 
 // Push adds a value to the queue.
+// The complexity is O(1).
 func (q *QueueImpl2) Push(v interface{}) {
 	q.tail.v[q.tp] = v
 	q.tp++
@@ -103,6 +105,7 @@ func (q *QueueImpl2) Push(v interface{}) {
 
 // Pop retrieves and removes the next element from the queue.
 // The second, bool result indicates whether a valid value was returned; if the queue is empty, false will be returned.
+// The complexity is O(1).
 func (q *QueueImpl2) Pop() (interface{}, bool) {
 	if q.len == 0 {
 		return nil, false
