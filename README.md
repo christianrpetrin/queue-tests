@@ -12,7 +12,9 @@ go test -bench=. -benchmem
 
 
 ## Tests
+See [bench_queue.md](bench_queue.md) and [bench_array_size.md](bench_array_size.md) for details.
 
+Tests
 - BenchmarkList*: benchmark the standard list package using it as a FIFO queue.
 - BenchmarkRing*: benchmark the standard ring package using it as a FIFO queue.
 - BenchmarkChannel*: benchmark a standard channel using it as a FIFO queue.
@@ -25,6 +27,7 @@ go test -bench=. -benchmem
 - BenchmarkQueueImpl4*: benchmark a custom queue implementation that stores the "next" pointer as part of the values array instead of using a separate field (as in previous custom implementations).
 - BenchmarkQueueImpl5*: benchmark a custom queue implementation that stores the values in a simple slice. Pop moves the current position to next one instead of removing the first element from the slice.
 - BenchmarkQueueImpl6*: benchmark a custom queue implementation that stores the values in a simple slice. Pop removes the first element from the slice.
+
 
 ## Supported Go Versions
 The bench tests on this package automatically compile and run for below Go versions.
