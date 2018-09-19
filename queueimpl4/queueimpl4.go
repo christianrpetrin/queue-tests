@@ -28,9 +28,9 @@ import "errors"
 
 const (
 	// internalArraySize holds the size of each internal array.
-	internalArraySize = 64
+	internalArraySize = 128
 	// internalArrayLinkPosition holds the last position of the internal array.
-	internalArrayLinkPosition = 63
+	internalArrayLinkPosition = 127
 )
 
 // QueueImpl4 represents an unbounded, dynamically growing FIFO queue.

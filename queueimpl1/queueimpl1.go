@@ -23,9 +23,11 @@
 // This implementation tests the queue performance when controlling the length and current positions in the arrays using the builtin len and append functions.
 package queueimpl1
 
+// Keping below as a variable to bench tests can easily be executed to probe the array size.
+// When the tests are done, below var will be moved to a const.
 var (
 	// internalArraySize holds the size of each internal array.
-	internalArraySize = 64
+	internalArraySize = 128
 )
 
 // QueueImpl1 represents an unbounded, dynamically growing FIFO queue.

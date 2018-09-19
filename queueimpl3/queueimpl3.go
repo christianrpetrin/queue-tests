@@ -28,7 +28,7 @@ import "errors"
 
 const (
 	// internalArraySize holds the size of each internal array.
-	internalArraySize = 64
+	internalArraySize = 128
 )
 
 // QueueImpl2 represents an unbounded, dynamically growing FIFO queue.
