@@ -22,7 +22,7 @@ package tests
 
 import (
 	"container/list"
-	"container/ring"
+	"strconv"
 	"testing"
 
 	"github.com/christianrpetrin/queue-tests/queueimpl1"
@@ -31,234 +31,285 @@ import (
 	"github.com/christianrpetrin/queue-tests/queueimpl4"
 	"github.com/christianrpetrin/queue-tests/queueimpl5"
 	"github.com/christianrpetrin/queue-tests/queueimpl6"
+	"github.com/christianrpetrin/queue-tests/queueimpl7"
 	gammazero "github.com/gammazero/deque"
 	juju "github.com/juju/utils/deque"
 	phf "github.com/phf/go-queue/queue"
 )
 
-func BenchmarkAddList(b *testing.B) {
-	q := list.New()
+// gammazero "github.com/gammazero/deque"
+// juju "github.com/juju/utils/deque"
+// phf "github.com/phf/go-queue/queue"
 
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
+type testData struct {
+	count  int
+	remove bool
+}
+
+var (
+	tests = []testData{
+		{count: 0},
+		{count: 1},
+		{count: 10},
+		{count: 100, remove: true},
+		{count: 1000},                // 1k
+		{count: 10000, remove: true}, //10k
+		{count: 100000},              // 100k
+	}
+
+	// Used to store temp values, avoiding any compiler optimizations.
+	tmp  interface{}
+	tmp2 bool
+)
+
+func BenchmarkList(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				l := list.New()
+
+				for i := 0; i < test.count; i++ {
+					l.PushBack(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						l.Remove(l.Front())
+					}
+				}
+
+				for e := l.Front(); e != nil; e = e.Next() {
+					tmp = e.Value
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddRing(b *testing.B) {
-	r := ring.New(b.N)
+func BenchmarkChannel(b *testing.B) {
+	for i, test := range tests {
+		// Only run the first 8 tests for channel as it is bounded and don't support very large channel sizes.
+		if i <= 8 {
+			b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+				for n := 0; n < b.N; n++ {
+					c := make(chan int, test.count)
 
-	for n := 0; n < b.N; n++ {
-		r.Value = n
-		r = r.Next()
+					for i := 0; i < test.count; i++ {
+						c <- i
+					}
+					for i := 0; i < test.count; i++ {
+						tmp = <-c
+					}
+				}
+			})
+		}
 	}
 }
 
-func BenchmarkAddChannel(b *testing.B) {
-	c := make(chan int, b.N)
+func BenchmarkGammazero(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				var q gammazero.Deque
 
-	for n := 0; n < b.N; n++ {
-		c <- n
+				for i := 0; i < test.count; i++ {
+					q.PushBack(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp = q.PopFront()
+					}
+				}
+				for q.Len() > 0 {
+					tmp = q.PopFront()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddGammazero(b *testing.B) {
-	var q gammazero.Deque
+func BenchmarkPhf(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := phf.New()
 
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
+				for i := 0; i < test.count; i++ {
+					q.PushBack(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp = q.PopFront()
+					}
+				}
+				for q.Len() > 0 {
+					tmp = q.PopFront()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddPhf(b *testing.B) {
-	q := phf.New()
+func BenchmarkJuju(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := juju.New()
 
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
+				for i := 0; i < test.count; i++ {
+					q.PushBack(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.PopFront()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.PopFront()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddJuju(b *testing.B) {
-	q := juju.New()
+func BenchmarkImpl1(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl1.New()
 
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
+	}
+}
+func BenchmarkImpl2(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl2.New()
+
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddImpl1(b *testing.B) {
-	q := queueimpl1.New()
+func BenchmarkImpl3(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl3.New()
 
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddImpl2(b *testing.B) {
-	q := queueimpl2.New()
+func BenchmarkImpl4(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl4.New()
 
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddImpl3(b *testing.B) {
-	q := queueimpl3.New()
+func BenchmarkImpl5(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl5.New()
 
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddImpl4(b *testing.B) {
-	q := queueimpl4.New()
+func BenchmarkImpl6(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl6.New()
 
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }
 
-func BenchmarkAddImpl5(b *testing.B) {
-	q := queueimpl5.New()
+func BenchmarkImpl7(b *testing.B) {
+	for _, test := range tests {
+		b.SetParallelism(1)
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl7.New()
 
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-}
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
 
-func BenchmarkAddImpl6(b *testing.B) {
-	q := queueimpl6.New()
-
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-}
-
-// --------------------------------------------------------------
-
-func BenchmarkAddRemoveList(b *testing.B) {
-	l := list.New()
-	for n := 0; n < b.N; n++ {
-		l.PushBack(n)
-	}
-
-	for e := l.Front(); e != nil; e = e.Next() {
-	}
-}
-
-func BenchmarkAddRemoveRing(b *testing.B) {
-	r := ring.New(b.N)
-	for n := 0; n < b.N; n++ {
-		r.Value = n
-		r = r.Next()
-	}
-
-	for j := 0; j < b.N; j++ {
-		r = r.Next()
-	}
-}
-
-func BenchmarkAddRemoveChannel(b *testing.B) {
-	c := make(chan int, b.N)
-	for n := 0; n < b.N; n++ {
-		c <- n
-	}
-
-	for n := 0; n < b.N; n++ {
-		<-c
-	}
-}
-
-func BenchmarkAddRemoveGammazero(b *testing.B) {
-	defer func() {
-		// gammazero deque implementation throws panic on empty deuque with no way to find out if the deuque is empty before hand.
-		// panic is a normal condition of this deque implementation.
-		recover()
-	}()
-	var q gammazero.Deque
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-
-	for v := q.PopFront(); v != nil; v = q.PopFront() {
-	}
-}
-
-func BenchmarkAddRemovePhf(b *testing.B) {
-	q := phf.New()
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-
-	for e := q.PopFront(); e != nil; e = q.PopFront() {
-	}
-}
-
-func BenchmarkAddRemoveJuju(b *testing.B) {
-	q := juju.New()
-	for n := 0; n < b.N; n++ {
-		q.PushBack(n)
-	}
-
-	for _, ok := q.PopFront(); ok; _, ok = q.PopFront() {
-	}
-}
-
-func BenchmarkAddRemoveImpl1(b *testing.B) {
-	q := queueimpl1.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for _, ok := q.Pop(); ok; _, ok = q.Pop() {
-	}
-}
-
-func BenchmarkAddRemoveImpl2(b *testing.B) {
-	q := queueimpl2.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for _, ok := q.Pop(); ok; _, ok = q.Pop() {
-	}
-}
-
-func BenchmarkAddRemoveImpl3(b *testing.B) {
-	q := queueimpl3.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
-	}
-}
-
-func BenchmarkAddRemoveImpl4(b *testing.B) {
-	q := queueimpl4.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
-	}
-}
-
-func BenchmarkAddRemoveImpl5(b *testing.B) {
-	q := queueimpl5.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
-	}
-}
-
-func BenchmarkAddRemoveImpl6(b *testing.B) {
-	q := queueimpl6.New()
-	for n := 0; n < b.N; n++ {
-		q.Push(n)
-	}
-
-	for v := q.Pop(); v != nil; v = q.Pop() {
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
 	}
 }

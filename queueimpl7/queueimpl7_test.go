@@ -18,21 +18,134 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package queueimpl4
+package queueimpl7
 
 import (
+	"fmt"
+	"sync"
 	"testing"
 )
 
-func TestQueueImpl4NewQueueShouldReturnInitiazedInstanceOfQueue(t *testing.T) {
-	q := New()
+type SafeQueue struct {
+	q Queueimpl7
+	m sync.Mutex
+}
 
-	if q == nil {
-		t.Error("Expected: new instance of queue; Got: nil")
+func (s *SafeQueue) Len() int {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	return s.q.Len()
+}
+
+func (s *SafeQueue) Push(v interface{}) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	s.q.Push(v)
+}
+
+func (s *SafeQueue) Pop() (interface{}, bool) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	return s.q.Pop()
+}
+
+func (s *SafeQueue) Front() (interface{}, bool) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	return s.q.Front()
+}
+
+func TestSafeQueue(t *testing.T) {
+	var q SafeQueue
+
+	q.Push(1)
+	q.Push(2)
+
+	for v, ok := q.Pop(); ok; v, ok = q.Pop() {
+		fmt.Println(v)
 	}
 }
 
-func TestQueueImpl4WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
+func TestQueueImpl7NewQueueShouldReturnInitiazedInstanceOfQueue(t *testing.T) {
+	ts := make([]int, 0, 1)
+
+	ts = append(ts, 1)
+	fmt.Println(cap(ts)) // Slice has 1 item; output: 1
+
+	ts = append(ts, 1)
+	fmt.Println(cap(ts)) // Slice has 2 items; output: 2
+
+	ts = append(ts, 1)
+	fmt.Println(cap(ts)) // Slice has 3 items; output: 4
+
+	ts = append(ts, 1)
+	ts = append(ts, 1)
+	fmt.Println(cap(ts)) // Slice has 5 items; output: 8
+
+	ts = append(ts, 1)
+	ts = append(ts, 1)
+	ts = append(ts, 1)
+	ts = append(ts, 1)
+	fmt.Println(cap(ts)) // Slice has 9 items; output: 16
+
+	// q := New()
+
+	// // Push 16 items to fill the first dynamic slice (sized 16).
+	// for i := 1; i <= 16; i++ {
+	// 	q.Push(i)
+	// }
+
+	// // Push an additional 128 items to fill the first full sized slice (sized 128).
+	// for i := 1; i <= 128; i++ {
+	// 	q.Push(i)
+	// }
+
+	// // Push 1 extra item that causes the creation of a new 128 sized slice to store this value,
+	// // adding a total of 145 items to the queue.
+	// q.Push(17)
+
+	// // Pops the first 143 items to release the first dynamic slice (sized 16) and
+	// // 127 items from the first full sized slice (sized 128).
+	// for i := 1; i <= 143; i++ {
+	// 	q.Pop()
+	// }
+
+	// // As unsafe.Sizeof (https://golang.org/pkg/unsafe/#Sizeof) doesn't consider the length of slices,
+	// // we need to manually calculate the memory used by the internal slices.
+	// var internalsliceType interface{}
+	// fmt.Println(fmt.Sprintf("%d bytes", unsafe.Sizeof(q)+(unsafe.Sizeof(internalsliceType) /* bytes per slice position */ *(127 /* head slice unused positions */ +127 /* tail slice unused positions */))))
+
+	// // Output for a 64bit system (Intel(R) Core(TM) i5-7267U CPU @ 3.10GHz): 4072 bytes
+
+	// if q == nil {
+	// 	t.Error("Expected: new instance of queue; Got: nil")
+	// }
+}
+
+func TestQueueImpl7WithZeroValuShouldReturnReadyToUseQueue(t *testing.T) {
+	var q Queueimpl7
+	q.Push(1)
+	q.Push(2)
+
+	v, ok := q.Pop()
+	if !ok || v.(int) != 1 {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	v, ok = q.Pop()
+	if !ok || v.(int) != 2 {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	_, ok = q.Pop()
+	if ok {
+		t.Error("Expected: empty slice (ok=false); Got: ok=true")
+	}
+}
+
+func TestQueueImpl7WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	q := New()
 	q.Push(1)
 	q.Push(nil)
@@ -61,7 +174,7 @@ func TestQueueImpl4WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	}
 }
 
-func TestQueueImpl4PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
+func TestQueueImpl7PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 	tests := map[string]struct {
 		putCount       []int
 		getCount       []int

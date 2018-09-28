@@ -19,108 +19,61 @@
 // SOFTWARE.
 
 // Package queueimpl1 implements an unbounded, dynamically growing FIFO queue.
-// Internally, queue store the values in fixed sized arrays that are linked using a singly linked list.
-// This implementation tests the queue performance when controlling the length and current positions in the arrays using the builtin len and append functions.
+// This implementation tests the queue performance when storing the values in a simple slice.
+// Pop removes the first slice element.
 package queueimpl1
 
-// Keping below as a variable to bench tests can easily be executed to probe the array size.
-// When the tests are done, below var will be moved to a const.
-var (
-	// internalArraySize holds the size of each internal array.
-	internalArraySize = 128
-)
-
-// QueueImpl1 represents an unbounded, dynamically growing FIFO queue.
-// The zero value for queue is an empty queue ready to use.
-type QueueImpl1 struct {
-	// Head points to the first node of the linked list.
-	head *Node
-
-	// Tail points to the last node of the linked list.
-	// In an empty queue, head and tail points to the same node.
-	tail *Node
-
-	// Pos is the index pointing to the current first element in the queue (i.e. first element added in the current queue values).
-	pos int
-
-	// Len holds the current queue length.
-	len int
-}
-
-// Node represents a queue node.
-// Each node holds an array of user managed values.
-type Node struct {
-	// v holds the list of user added values in this node.
+// Queueimpl1 represents an unbounded, dynamically growing FIFO queue.
+type Queueimpl1 struct {
+	// The queue values.
 	v []interface{}
-
-	// n points to the next node in the linked list.
-	n *Node
 }
 
 // New returns an initialized queue.
-func New() *QueueImpl1 {
-	return new(QueueImpl1).Init()
+func New() *Queueimpl1 {
+	return new(Queueimpl1).Init()
 }
 
 // Init initializes or clears queue q.
-func (q *QueueImpl1) Init() *QueueImpl1 {
-	q.head = newNode()
-	q.tail = q.head
-	q.pos = 0
-	q.len = 0
+func (q *Queueimpl1) Init() *Queueimpl1 {
+	q.v = make([]interface{}, 0)
 	return q
 }
 
 // Len returns the number of elements of queue q.
 // The complexity is O(1).
-func (q *QueueImpl1) Len() int { return q.len }
+func (q *Queueimpl1) Len() int { return len(q.v) }
 
 // Front returns the first element of list l or nil if the list is empty.
-// The second, bool result indicates whether a valid value was returned; if the queue is empty, false will be returned.
+// The second, bool result indicates whether a valid value was returned;
+//   if the queue is empty, false will be returned.
 // The complexity is O(1).
-func (q *QueueImpl1) Front() (interface{}, bool) {
-	if q.len == 0 {
+func (q *Queueimpl1) Front() (interface{}, bool) {
+	if len(q.v) == 0 {
 		return nil, false
 	}
 
-	return q.head.v[q.pos], true
+	return q.v[0], true
 }
 
 // Push adds a value to the queue.
-// The complexity is O(1).
-func (q *QueueImpl1) Push(v interface{}) {
-	if len(q.tail.v) >= internalArraySize {
-		q.tail.n = newNode()
-		q.tail = q.tail.n
-	}
-	q.tail.v = append(q.tail.v, v)
-	q.len++
+// The complexity is amortized O(1).
+func (q *Queueimpl1) Push(v interface{}) {
+	q.v = append(q.v, v)
 }
 
 // Pop retrieves and removes the next element from the queue.
 // The second, bool result indicates whether a valid value was returned; if the queue is empty, false will be returned.
-// The complexity is O(1).
-func (q *QueueImpl1) Pop() (interface{}, bool) {
-	if q.len == 0 {
+// If the queue is empty, nil is returned.
+// The complexity is amortized O(1).
+func (q *Queueimpl1) Pop() (interface{}, bool) {
+	if len(q.v) == 0 {
 		return nil, false
 	}
 
-	v := q.head.v[q.pos]
-	q.head.v[q.pos] = nil // Avoid memory leaks
-	q.pos++
-	q.len--
-	if q.pos >= internalArraySize {
-		q.head = q.head.n
-		q.pos = 0
-	}
+	v := q.v[0]
+	q.v[0] = nil // Avoid memory leaks
+	q.v = q.v[1:]
 
 	return v, true
-}
-
-// newNode returns an initialized node.
-func newNode() *Node {
-	return &Node{
-		v: make([]interface{}, 0, internalArraySize),
-		n: nil,
-	}
 }

@@ -32,11 +32,32 @@ func TestQueueImpl3NewQueueShouldReturnInitiazedInstanceOfQueue(t *testing.T) {
 	}
 }
 
-func TestQueueImpl3WithNilValuesShouldReturnError(t *testing.T) {
+func TestQueueImpl3WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	q := New()
+	q.Push(1)
+	q.Push(nil)
+	q.Push(2)
+	q.Push(nil)
 
-	if err := q.Push(nil); err == nil {
-		t.Error("Expected: error; Got: success")
+	v, ok := q.Pop()
+	if !ok || v.(int) != 1 {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	v, ok = q.Pop()
+	if !ok || v != nil {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	v, ok = q.Pop()
+	if !ok || v.(int) != 2 {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	v, ok = q.Pop()
+	if !ok || v != nil {
+		t.Errorf("Expected: 1; Got: %d", v)
+	}
+	_, ok = q.Pop()
+	if ok {
+		t.Error("Expected: empty slice (ok=false); Got: ok=true")
 	}
 }
 
@@ -52,8 +73,8 @@ func TestQueueImpl3PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 			remainingCount: 0,
 		},
 		"Test 100 items": {
-			putCount:       []int{2},
-			getCount:       []int{2},
+			putCount:       []int{100},
+			getCount:       []int{100},
 			remainingCount: 0,
 		},
 		"Test 1000 items": {
@@ -88,22 +109,25 @@ func TestQueueImpl3PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 			q := New()
 			lastPut := 0
 			lastGet := 0
+			var ok bool
 			var v interface{}
 			for count := 0; count < len(test.getCount); count++ {
 				for i := 1; i <= test.putCount[count]; i++ {
 					lastPut++
 					q.Push(lastPut)
-					if v = q.Front(); v != lastGet+1 {
+					if v, ok = q.Front(); !ok || v != lastGet+1 {
 						t.Errorf("Expected: %d; Got: %d", lastGet, v)
 					}
 				}
 
 				for i := 1; i <= test.getCount[count]; i++ {
 					lastGet++
-					if v = q.Front(); v.(int) != lastGet {
+					v, ok = q.Front()
+					if !ok || v.(int) != lastGet {
 						t.Errorf("Expected: %d; Got: %d", lastGet, v)
 					}
-					if v = q.Pop(); v.(int) != lastGet {
+					v, ok = q.Pop()
+					if !ok || v.(int) != lastGet {
 						t.Errorf("Expected: %d; Got: %d", lastGet, v)
 					}
 				}
@@ -114,11 +138,11 @@ func TestQueueImpl3PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 			}
 
 			if test.remainingCount > 0 {
-				if v = q.Front(); v == nil {
+				if v, ok = q.Front(); !ok || v == nil {
 					t.Error("Expected: non-empty queue; Got: empty")
 				}
 			} else {
-				if v = q.Front(); v != nil {
+				if v, ok = q.Front(); ok || v != nil {
 					t.Error("Expected: empty queue; Got: non-empty")
 				}
 			}
@@ -126,20 +150,21 @@ func TestQueueImpl3PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 			for i := 1; i <= test.remainingCount; i++ {
 				lastGet++
 
-				if v = q.Front(); v.(int) != lastGet {
+				if v, ok = q.Front(); !ok || v.(int) != lastGet {
 					t.Errorf("Expected: %d; Got: %d", lastGet, v)
 				}
-				if v = q.Pop(); v.(int) != lastGet {
+				v, ok = q.Pop()
+				if !ok || v.(int) != lastGet {
 					t.Errorf("Expected: %d; Got: %d", lastGet, v)
 				}
 			}
-			if v = q.Front(); v != nil {
+			if v, ok = q.Front(); ok || v != nil {
 				t.Errorf("Expected: nil as the queue should be empty; Got: %d", v)
 			}
-			if v = q.Pop(); v != nil {
+			if v, ok = q.Pop(); ok || v != nil {
 				t.Errorf("Expected: nil as the queue should be empty; Got: %d", v)
 			}
-			if v = q.Front(); v != nil {
+			if v, ok = q.Front(); ok || v != nil {
 				t.Error("Expected: empty queue; Got: non-empty")
 			}
 			if q.Len() != 0 {

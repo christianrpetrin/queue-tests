@@ -19,49 +19,63 @@
 // SOFTWARE.
 
 // Package queueimpl4 implements an unbounded, dynamically growing FIFO queue.
-// This implementation tests the queue performance when storing the "next" pointer as part of the values array instead of using a separate field.
-// The next element is stored in the last position of the internal array, which is a reserved position.
-// A node is each internal array that is used to store the elements.
+// Internally, queue store the values in fixed sized slices that are linked using
+// a singly linked list.
+// This implementation tests the queue performance when controlling the length and
+// current positions in the slices using simple local variables instead of relying
+// on the builtin len and append functions (i.e. use array instead of slice).
+// Otherwise this is the same implementation as queueimpl3.
 package queueimpl4
 
-import "errors"
-
 const (
-	// internalArraySize holds the size of each internal array.
-	internalArraySize = 128
-	// internalArrayLinkPosition holds the last position of the internal array.
-	internalArrayLinkPosition = 127
+	// internalSliceSize holds the size of each internal slice.
+	internalSliceSize = 128
+
+	// internalSliceLastPosition holds the last position of the internal slice.
+	internalSliceLastPosition = 127
 )
 
-// QueueImpl4 represents an unbounded, dynamically growing FIFO queue.
-// The zero value for queue is an empty queue ready to use.
-type QueueImpl4 struct {
+// Queueimpl4 represents an unbounded, dynamically growing FIFO queue.
+type Queueimpl4 struct {
 	// Head points to the first node of the linked list.
-	head []interface{}
+	head *Node
 
 	// Tail points to the last node of the linked list.
 	// In an empty queue, head and tail points to the same node.
-	tail []interface{}
+	tail *Node
 
-	// Hp is the index pointing to the current first element in the queue (i.e. first element added in the current queue values).
+	// Hp is the index pointing to the current first element in the queue
+	// (i.e. first element added in the current queue values).
 	hp int
 
-	// Tp is the index pointing to the current last element in the queue (i.e. last element added in the current queue values).
+	// Tp is the index pointing to the current last element in the queue
+	// (i.e. last element added in the current queue values).
 	tp int
 
 	// Len holds the current queue values length.
 	len int
 }
 
+// Node represents a queue node.
+// Each node holds an slice of user managed values.
+type Node struct {
+	// v holds the list of user added values in this node.
+	v [internalSliceSize]interface{}
+
+	// n points to the next node in the linked list.
+	n *Node
+}
+
 // New returns an initialized queue.
-func New() *QueueImpl4 {
-	return new(QueueImpl4).Init()
+func New() *Queueimpl4 {
+	return new(Queueimpl4).Init()
 }
 
 // Init initializes or clears queue q.
-func (q *QueueImpl4) Init() *QueueImpl4 {
-	q.head = newNode()
-	q.tail = q.head
+func (q *Queueimpl4) Init() *Queueimpl4 {
+	n := newNode()
+	q.head = n
+	q.tail = n
 	q.hp = 0
 	q.tp = 0
 	q.len = 0
@@ -70,60 +84,60 @@ func (q *QueueImpl4) Init() *QueueImpl4 {
 
 // Len returns the number of elements of queue q.
 // The complexity is O(1).
-func (q *QueueImpl4) Len() int { return q.len }
+func (q *Queueimpl4) Len() int { return q.len }
 
 // Front returns the first element of list l or nil if the list is empty.
-// If the queue is empty, nil is returned.
+// The second, bool result indicates whether a valid value was returned;
+//   if the queue is empty, false will be returned.
 // The complexity is O(1).
-func (q *QueueImpl4) Front() interface{} {
-	if q.head[q.hp] == nil {
-		return nil
+func (q *Queueimpl4) Front() (interface{}, bool) {
+	if q.len == 0 {
+		return nil, false
 	}
 
-	return q.head[q.hp]
+	return q.head.v[q.hp], true
 }
 
 // Push adds a value to the queue.
 // The complexity is O(1).
-func (q *QueueImpl4) Push(v interface{}) error {
-	if v == nil {
-		return errors.New("Cannot add nil value")
-	}
-
-	q.tail[q.tp] = v
-	q.tp++
-	q.len++
-	if q.tp >= internalArrayLinkPosition {
-		node := newNode()
-		q.tail[q.tp] = node
-		q.tail = node
+func (q *Queueimpl4) Push(v interface{}) {
+	if q.tp >= internalSliceSize {
+		n := newNode()
+		q.tail.n = n
+		q.tail = n
 		q.tp = 0
 	}
 
-	return nil
+	q.tail.v[q.tp] = v
+	q.len++
+	q.tp++
 }
 
 // Pop retrieves and removes the next element from the queue.
-// If the queue is empty, nil is returned.
+// The second, bool result indicates whether a valid value was returned; if the queue is empty, false will be returned.
 // The complexity is O(1).
-func (q *QueueImpl4) Pop() interface{} {
+func (q *Queueimpl4) Pop() (interface{}, bool) {
 	if q.len == 0 {
-		return nil
+		return nil, false
 	}
 
-	v := q.head[q.hp]
-	q.head[q.hp] = nil // Avoid memory leaks
-	q.hp++
+	v := q.head.v[q.hp]
+	q.head.v[q.hp] = nil // Avoid memory leaks
 	q.len--
-	if q.hp >= internalArrayLinkPosition {
-		q.head = q.head[q.hp].([]interface{})
+
+	if q.hp >= internalSliceLastPosition {
+		n := q.head.n
+		q.head.n = nil // Avoid memory leaks
+		q.head = n
 		q.hp = 0
+	} else {
+		q.hp++
 	}
 
-	return v
+	return v, true
 }
 
-// newNode returns an initialized array of interface{}.
-func newNode() []interface{} {
-	return make([]interface{}, internalArraySize)
+// newNode returns an initialized node.
+func newNode() *Node {
+	return &Node{}
 }

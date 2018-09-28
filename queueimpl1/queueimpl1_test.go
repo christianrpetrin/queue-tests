@@ -57,7 +57,7 @@ func TestQueueImpl1WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	}
 	_, ok = q.Pop()
 	if ok {
-		t.Error("Expected: empty array (ok=false); Got: ok=true")
+		t.Error("Expected: empty slice (ok=false); Got: ok=true")
 	}
 }
 
@@ -73,8 +73,8 @@ func TestQueueImpl1PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 			remainingCount: 0,
 		},
 		"Test 100 items": {
-			putCount:       []int{2},
-			getCount:       []int{2},
+			putCount:       []int{100},
+			getCount:       []int{100},
 			remainingCount: 0,
 		},
 		"Test 1000 items": {
