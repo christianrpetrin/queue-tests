@@ -19,20 +19,20 @@
 // SOFTWARE.
 
 // Package queueimpl4 implements an unbounded, dynamically growing FIFO queue.
-// Internally, queue store the values in fixed sized slices that are linked using
+// Internally, queue store the values in fixed sized arrays that are linked using
 // a singly linked list.
 // This implementation tests the queue performance when controlling the length and
-// current positions in the slices using simple local variables instead of relying
+// current positions in the arrays using simple local variables instead of relying
 // on the builtin len and append functions (i.e. use array instead of slice).
 // Otherwise this is the same implementation as queueimpl3.
 package queueimpl4
 
 const (
-	// internalSliceSize holds the size of each internal slice.
-	internalSliceSize = 128
+	// internalArraySize holds the size of each internal array.
+	internalArraySize = 128
 
-	// internalSliceLastPosition holds the last position of the internal slice.
-	internalSliceLastPosition = 127
+	// internalArrayLastPosition holds the last position of the internal array.
+	internalArrayLastPosition = 127
 )
 
 // Queueimpl4 represents an unbounded, dynamically growing FIFO queue.
@@ -57,10 +57,10 @@ type Queueimpl4 struct {
 }
 
 // Node represents a queue node.
-// Each node holds an slice of user managed values.
+// Each node holds an array of user managed values.
 type Node struct {
 	// v holds the list of user added values in this node.
-	v [internalSliceSize]interface{}
+	v [internalArraySize]interface{}
 
 	// n points to the next node in the linked list.
 	n *Node
@@ -101,7 +101,7 @@ func (q *Queueimpl4) Front() (interface{}, bool) {
 // Push adds a value to the queue.
 // The complexity is O(1).
 func (q *Queueimpl4) Push(v interface{}) {
-	if q.tp >= internalSliceSize {
+	if q.tp >= internalArraySize {
 		n := newNode()
 		q.tail.n = n
 		q.tail = n
@@ -125,7 +125,7 @@ func (q *Queueimpl4) Pop() (interface{}, bool) {
 	q.head.v[q.hp] = nil // Avoid memory leaks
 	q.len--
 
-	if q.hp >= internalSliceLastPosition {
+	if q.hp >= internalArrayLastPosition {
 		n := q.head.n
 		q.head.n = nil // Avoid memory leaks
 		q.head = n

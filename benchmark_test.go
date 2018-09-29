@@ -37,10 +37,6 @@ import (
 	phf "github.com/phf/go-queue/queue"
 )
 
-// gammazero "github.com/gammazero/deque"
-// juju "github.com/juju/utils/deque"
-// phf "github.com/phf/go-queue/queue"
-
 type testData struct {
 	count  int
 	remove bool
@@ -75,7 +71,6 @@ func BenchmarkList(b *testing.B) {
 						l.Remove(l.Front())
 					}
 				}
-
 				for e := l.Front(); e != nil; e = e.Next() {
 					tmp = e.Value
 				}
