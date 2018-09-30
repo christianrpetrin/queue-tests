@@ -289,7 +289,6 @@ func BenchmarkImpl6(b *testing.B) {
 
 func BenchmarkImpl7(b *testing.B) {
 	for _, test := range tests {
-		b.SetParallelism(1)
 		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
 			for n := 0; n < b.N; n++ {
 				q := queueimpl7.New()
