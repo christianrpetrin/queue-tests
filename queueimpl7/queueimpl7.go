@@ -24,9 +24,7 @@
 // This implementation tests the queue performance when performing lazy creation of
 // the internal slice as well as starting with a 1 sized slice, allowing it to grow
 // up to 16 by using the builtin append function. Subsequent slices are created with
-// 128 fixed size. This implementation also tests the idea of reusing the internal slices
-// instead of always discarding and creating new ones. Otherwise this is the same
-// implementation as queueimpl6.
+// 128 fixed size.
 package queueimpl7
 
 // Keeping below as var so it is possible to run the slice size bench tests with no coding changes.
