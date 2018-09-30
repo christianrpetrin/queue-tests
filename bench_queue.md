@@ -28,9 +28,6 @@ The tests:
 
 
 ## Results
-Below a few interesting results.
-<br/>
-
 Initialization time only<br/>
 Performance<br/>
 ![ns/op](https://github.com/christianrpetrin/queue-tests/blob/master/images/queue-0-items-perf.jpg?raw=true "Benchmark tests")
