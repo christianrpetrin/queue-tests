@@ -58,12 +58,12 @@ type Queueimpl7 struct {
 	// Len holds the current queue values length.
 	len int
 
-	// lastsliceReize holds the size of the last created internal slice.
+	// lastSliceSize holds the size of the last created internal slice.
 	lastSliceSize int
 }
 
 // Node represents a queue node.
-// Each node holds an slice of user managed values.
+// Each node holds a slice of user managed values.
 type Node struct {
 	// v holds the list of user added values in this node.
 	v []interface{}
@@ -90,7 +90,7 @@ func (q *Queueimpl7) Init() *Queueimpl7 {
 // The complexity is O(1).
 func (q *Queueimpl7) Len() int { return q.len }
 
-// Front returns the first element of list l or nil if the list is empty.
+// Front returns the first element of queue q or nil if the queue is empty.
 // The second, bool result indicates whether a valid value was returned;
 //   if the queue is empty, false will be returned.
 // The complexity is O(1).
@@ -120,7 +120,7 @@ func (q *Queueimpl7) Push(v interface{}) {
 	q.len++
 }
 
-// Pop retrieves and removes the next element from the queue.
+// Pop retrieves and removes the current element from the queue.
 // The second, bool result indicates whether a valid value was returned;
 // 	if the queue is empty, false will be returned.
 // The complexity is O(1).
