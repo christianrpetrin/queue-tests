@@ -63,9 +63,9 @@ Memory<br/>
 ![B/op](https://github.com/christianrpetrin/queue-tests/blob/master/images/queue-line-mem.jpg?raw=true "Benchmark tests")
 <br/>
 
-[Detailed, curated results can be found here](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=668319604&single=true)
+Detailed, curated results can be found [here](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=668319604&single=true)
 
-[Aggregated, curated results can be found here](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=582031751&single=true)
+Aggregated, curated results can be found [here](https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCm7v51Eo5nq66NsGi8aQI6gL14XYJWqaeRJ78ZIWq1pRCtEZfsLD2FcI-gIpUhhTPnkzqDte_SDB/pubhtml?gid=582031751&single=true)
 <br/>
 
 Benchmark tests can be found [here](benchmark_test.go).
