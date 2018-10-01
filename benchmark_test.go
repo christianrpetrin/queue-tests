@@ -35,6 +35,7 @@ import (
 	gammazero "github.com/gammazero/deque"
 	juju "github.com/juju/utils/deque"
 	phf "github.com/phf/go-queue/queue"
+	cookiejar "gopkg.in/karalabe/cookiejar.v2/collections/queue"
 )
 
 type testData struct {
@@ -303,6 +304,27 @@ func BenchmarkImpl7(b *testing.B) {
 				}
 				for q.Len() > 0 {
 					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkCookiejar(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := cookiejar.New()
+
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp = q.Pop()
+					}
+				}
+				for q.Size() > 0 {
+					tmp = q.Pop()
 				}
 			}
 		})

@@ -64,6 +64,23 @@ func TestQueueImpl7WithZeroValueAndEmptyShouldReturnAsEmpty(t *testing.T) {
 	}
 }
 
+func TestQueueImpl7InitShouldReturnAEmptyQueue(t *testing.T) {
+	var q Queueimpl7
+	q.Push(1)
+
+	q.Init()
+
+	if _, ok := q.Front(); ok {
+		t.Error("Expected: false as the queue is empty; Got: true")
+	}
+	if _, ok := q.Pop(); ok {
+		t.Error("Expected: false as the queue is empty; Got: true")
+	}
+	if l := q.Len(); l != 0 {
+		t.Errorf("Expected: 0 as the queue is empty; Got: %d", l)
+	}
+}
+
 func TestQueueImpl7WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	q := New()
 	q.Push(1)
