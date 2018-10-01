@@ -25,6 +25,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/christianrpetrin/queue-tests/bcmills"
 	"github.com/christianrpetrin/queue-tests/queueimpl1"
 	"github.com/christianrpetrin/queue-tests/queueimpl2"
 	"github.com/christianrpetrin/queue-tests/queueimpl3"
@@ -326,6 +327,27 @@ func BenchmarkCookiejar(b *testing.B) {
 				}
 				for q.Size() > 0 {
 					tmp = q.Pop()
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkBcmills(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				var q bcmills.Deque
+
+				for i := 0; i < test.count; i++ {
+					q.Send(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp = q.NextEvent()
+					}
+				}
+				for q.NextEvent() != nil {
+					tmp = q.NextEvent()
 				}
 			}
 		})
