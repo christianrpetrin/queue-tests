@@ -309,6 +309,8 @@ func BenchmarkImpl7(b *testing.B) {
 	}
 }
 
+// Below are supplemental tests.
+
 func BenchmarkCookiejar(b *testing.B) {
 	for _, test := range tests {
 		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
