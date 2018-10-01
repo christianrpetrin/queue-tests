@@ -110,7 +110,7 @@ func TestQueueImpl7WithNilValuesShouldReturnAllValuesInOrder(t *testing.T) {
 	}
 }
 
-func TestQueueImpl7PutGetFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
+func TestQueueImpl7PushPopFrontShouldRetrieveAllElementsInOrder(t *testing.T) {
 	tests := map[string]struct {
 		putCount       []int
 		getCount       []int
