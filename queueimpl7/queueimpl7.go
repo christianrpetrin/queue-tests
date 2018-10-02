@@ -93,7 +93,7 @@ func (q *Queueimpl7) Len() int { return q.len }
 //   if the queue is empty, false will be returned.
 // The complexity is O(1).
 func (q *Queueimpl7) Front() (interface{}, bool) {
-	if q.len == 0 {
+	if q.head == nil {
 		return nil, false
 	}
 	return q.head.v[q.hp], true
@@ -123,7 +123,7 @@ func (q *Queueimpl7) Push(v interface{}) {
 // 	if the queue is empty, false will be returned.
 // The complexity is O(1).
 func (q *Queueimpl7) Pop() (interface{}, bool) {
-	if q.len == 0 {
+	if q.head == nil {
 		return nil, false
 	}
 
