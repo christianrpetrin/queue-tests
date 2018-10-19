@@ -43,7 +43,7 @@ func TestQueueImpl7WithZeroValueShouldReturnReadyToUseQueue(t *testing.T) {
 	}
 	v, ok = q.Pop()
 	if !ok || v.(int) != 2 {
-		t.Errorf("Expected: 1; Got: %d", v)
+		t.Errorf("Expected: 2; Got: %d", v)
 	}
 	_, ok = q.Pop()
 	if ok {
