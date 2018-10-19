@@ -1,4 +1,4 @@
-// Copyright (c) 2018 cloud-spin
+// Copyright (c) 2018 Christian R. Petrin
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
