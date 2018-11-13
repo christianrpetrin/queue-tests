@@ -131,7 +131,6 @@ func (q *Queueimpl7) Pop() (interface{}, bool) {
 	q.head.v[q.hp] = nil // Avoid memory leaks
 	q.len--
 	q.hp++
-
 	if q.hp >= len(q.head.v) {
 		n := q.head.n
 		q.head.n = nil // Avoid memory leaks
