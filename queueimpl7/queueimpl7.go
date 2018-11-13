@@ -100,7 +100,7 @@ func (q *Queueimpl7) Front() (interface{}, bool) {
 }
 
 // Push adds a value to the queue.
-// The complexity is amortized O(1).
+// The complexity is O(1).
 func (q *Queueimpl7) Push(v interface{}) {
 	if q.head == nil {
 		h := newNode(firstSliceSize)
