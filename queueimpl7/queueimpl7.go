@@ -137,7 +137,6 @@ func (q *Queueimpl7) Pop() (interface{}, bool) {
 		q.head = n
 		q.hp = 0
 	}
-
 	return v, true
 }
 
