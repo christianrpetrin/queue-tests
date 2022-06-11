@@ -33,6 +33,7 @@ import (
 	"github.com/christianrpetrin/queue-tests/queueimpl5"
 	"github.com/christianrpetrin/queue-tests/queueimpl6"
 	"github.com/christianrpetrin/queue-tests/queueimpl7"
+	"github.com/christianrpetrin/queue-tests/queueimpl7generic"
 	gammazero "github.com/gammazero/deque"
 	juju "github.com/juju/utils/deque"
 	phf "github.com/phf/go-queue/queue"
@@ -294,6 +295,27 @@ func BenchmarkImpl7(b *testing.B) {
 		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
 			for n := 0; n < b.N; n++ {
 				q := queueimpl7.New()
+
+				for i := 0; i < test.count; i++ {
+					q.Push(i)
+
+					if test.remove && i > 0 && i%3 == 0 {
+						tmp, tmp2 = q.Pop()
+					}
+				}
+				for q.Len() > 0 {
+					tmp, tmp2 = q.Pop()
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkImpl7Generic(b *testing.B) {
+	for _, test := range tests {
+		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				q := queueimpl7generic.New[int]()
 
 				for i := 0; i < test.count; i++ {
 					q.Push(i)
