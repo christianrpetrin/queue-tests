@@ -51,7 +51,7 @@ var (
 		{count: 10},
 		{count: 100, remove: true},
 		{count: 1000},                // 1k
-		{count: 10000, remove: true}, //10k
+		{count: 10000, remove: true}, // 10k
 		{count: 100000},              // 100k
 	}
 
@@ -105,7 +105,7 @@ func BenchmarkGammazero(b *testing.B) {
 	for _, test := range tests {
 		b.Run(strconv.Itoa(test.count), func(b *testing.B) {
 			for n := 0; n < b.N; n++ {
-				var q gammazero.Deque
+				var q gammazero.Deque[int]
 
 				for i := 0; i < test.count; i++ {
 					q.PushBack(i)
